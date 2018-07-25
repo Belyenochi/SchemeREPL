@@ -1,0 +1,11 @@
+/* main.css */
+body,html {margin:0;padding:0;}
+.container-fluid {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+#page-content-wrapper {
+  padding-top: 0px;
+	padding-left: 10px;
+	padding-bottom: 0px;
+}
