@@ -34,6 +34,7 @@ function appCursor (cursor){
 		this.height = cursor.height;
 }
 
+// 外部变量：PROMPT promptPad promptWidth lineHeight cursorWidth cursorHeight
 function initApp()
 {
 	theCanvas = document.getElementById("gamescreen");
@@ -46,13 +47,14 @@ function initApp()
 	cursor = new appCursor({x:promptWidth,y:lineHeight,width:cursorWidth,height:cursorHeight});
   cursorInit = new appCursor({x:promptWidth,y:lineHeight,width:cursorWidth,height:cursorHeight});
 
-	window.addEventListener("resize", draw);
+	// window.addEventListener("resize", draw);
 	window.addEventListener("keydown",keyDownHandler);
 	window.addEventListener("keypress",showKey);
 	initViewArea();
 	setInterval(flashCursor,300);
 }
 
+// 外部变量：allUserCmds currentCmdInd currentCmd currentPro cursorInit
 function clear()
 {
 	var c = document.getElementById("gamescreen");
@@ -66,6 +68,7 @@ function clear()
 	initViewArea();
 }
 
+// 外部变量：ctx lineHeight cursor PROMPT leftWindowMargin
 function drawNewLine(logMsg = PROMPT){
 	ctx.font = outputFont;
 	ctx.fillStyle = fontColor;
@@ -77,6 +80,7 @@ function drawNewLine(logMsg = PROMPT){
 	ctx.fillText(PROMPT,leftWindowMargin, cursor.y + lineHeight);
 }
 
+// 外部变量：ctx leftWindowMargin cursor lineHeight
 function drawRemainLine(){
 	ctx.font = outputFont;
 	ctx.fillStyle = fontColor;
@@ -84,6 +88,7 @@ function drawRemainLine(){
 	ctx.fillText  (textOut,leftWindowMargin, cursor.y + lineHeight);
 }
 
+// 外部变量：ctx PROMPT leftWindowMargin lineHeight
 function drawPrompt(Yoffset)
 {
 	ctx.font = outputFont;
@@ -92,6 +97,7 @@ function drawPrompt(Yoffset)
 	ctx.fillText  (textOut,leftWindowMargin, Yoffset * lineHeight);
 }
 
+// 外部变量：ctx PROMPT leftWindowMargin lineHeight
 function blotPrevChar(){
 	blotOutCursor();
 	ctx.fillStyle = "#000000";
@@ -99,6 +105,7 @@ function blotPrevChar(){
 	ctx.fillRect(cursor.x,cursor.y-(charWidth + widthOffset),cursor.width+3,15);
 }
 
+// 外部变量：ctx cursor
 function blotOutCursor(){
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(cursor.x,cursor.y,cursor.width,cursor.height);
@@ -141,16 +148,9 @@ function keyDownHandler(e){
 
 			break;
 	}
-	// handle <Backspace> key
-	// if((currentKey === 8 || currentKey === 'Backspace')
-	//  && document.activeElement !== 'text') {
-	// }
-	// handle <ENTER> key
-	// if (currentKey == 13 || currentKey == 'Enter')
-	// {
-	// }
 }
 
+// 外部变量：ctx outputFont fontColor cursor charWidth currentCmd
 function showKey(e){
 	blotOutCursor();
 
@@ -163,6 +163,7 @@ function showKey(e){
 
 }
 
+// 外部变量：flashCounter ctx fontColor cursor
 function flashCursor(){
 
 	var flag = flashCounter % 3;
@@ -185,6 +186,7 @@ function flashCursor(){
 		}
 	}
 }
+
 function cursor (cursor){
 	this.x = cursor.x;
 	this.y = cursor.y;
@@ -192,6 +194,7 @@ function cursor (cursor){
 	this.height = cursor.height;
 }
 
+// 外部变量：ctx outputFont window fontColor PROMPT leftWindowMargin cursor
 function initViewArea() {
 	// the -5 in the two following lines makes the canvas area, just slightly smaller
 	// than the entire window.  this helps so the scrollbars do not appear.
@@ -206,56 +209,58 @@ function initViewArea() {
 	var textOut = PROMPT;
 
 	ctx.fillText  (textOut,leftWindowMargin, cursor.y);
-	draw();
+	// draw();
 }
 
-function draw()
-{
-	ctx.canvas.width  = window.innerWidth-5;
-	ctx.canvas.height = window.innerHeight-5;
+// 外部变量：ctx window outputFont fontColor allUserCmds
+//          promptWidth charWidth lineHeight currentCmd cursor
+// function draw()
+// {
+// 	ctx.canvas.width  = window.innerWidth-5;
+// 	ctx.canvas.height = window.innerHeight-5;
 
-	ctx.fillStyle = "#000000";
-	ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
-	ctx.font = outputFont;
-	ctx.fillStyle = fontColor;
+// 	ctx.fillStyle = "#000000";
+// 	ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
+// 	ctx.font = outputFont;
+// 	ctx.fillStyle = fontColor;
 
-	for (var i=0;i<allUserCmds.length;i++)
-	{
-		drawPrompt(i+1);
-		if (i == 0)
-		{
-			xVal = promptWidth;
-		}
-		else
-		{
-			xVal = promptWidth-charWidth;
-		}
+// 	for (var i=0;i<allUserCmds.length;i++)
+// 	{
+// 		drawPrompt(i+1);
+// 		if (i == 0)
+// 		{
+// 			xVal = promptWidth;
+// 		}
+// 		else
+// 		{
+// 			xVal = promptWidth-charWidth;
+// 		}
 
-		ctx.font = outputFont;
-		ctx.fillStyle = fontColor;
-		for (var letterCount = 0; letterCount < allUserCmds[i].length;letterCount++)
-		{
-			ctx.fillText(allUserCmds[i][letterCount], xVal, lineHeight * (i+1));
-			xVal+=charWidth;
-		}
-	}
-	if (currentCmd != "")
-	{
-		drawPrompt(Math.ceil(cursor.y/lineHeight));
-		ctx.font = outputFont;
-		ctx.fillStyle = fontColor;
-		xVal = promptWidth-charWidth;
-		for (var letterCount = 0; letterCount < currentCmd.length;letterCount++)
-		{
-			ctx.fillText(currentCmd[letterCount], xVal, cursor.y);
-			xVal += charWidth;
-		}
-	}
-	else
-	{
-		drawPrompt(Math.ceil(cursor.y/lineHeight));
-	}
-}
+// 		ctx.font = outputFont;
+// 		ctx.fillStyle = fontColor;
+// 		for (var letterCount = 0; letterCount < allUserCmds[i].length;letterCount++)
+// 		{
+// 			ctx.fillText(allUserCmds[i][letterCount], xVal, lineHeight * (i+1));
+// 			xVal+=charWidth;
+// 		}
+// 	}
+// 	if (currentCmd != "")
+// 	{
+// 		drawPrompt(Math.ceil(cursor.y/lineHeight));
+// 		ctx.font = outputFont;
+// 		ctx.fillStyle = fontColor;
+// 		xVal = promptWidth-charWidth;
+// 		for (var letterCount = 0; letterCount < currentCmd.length;letterCount++)
+// 		{
+// 			ctx.fillText(currentCmd[letterCount], xVal, cursor.y);
+// 			xVal += charWidth;
+// 		}
+// 	}
+// 	else
+// 	{
+// 		drawPrompt(Math.ceil(cursor.y/lineHeight));
+// 	}
+// }
 
 /*
   keyboard handler:
@@ -265,6 +270,7 @@ function draw()
 	adHandler   ->   handler <ArrowDown>
 */
 
+// 外部变量：cursor promptWidth currentCmd
 function bsHandler(e) {
 	if (document.activeElement !== 'text') {
 		e.preventDefault();
@@ -280,6 +286,8 @@ function bsHandler(e) {
 	}
 }
 
+// 外部变量：currentPro currentCmd cursor promptWidth charWidth
+//          lineHeight allUserCmds
 function etHandler(e) {
 
 	currentPro.push(currentCmd);
@@ -322,6 +330,8 @@ function etHandler(e) {
 	}
 }
 
+// 外部变量：currentCmdInd allUserCmds ctx outputFont fontColor PROMPT
+//          leftWindowMargin cursor
 function adHandler(e) {
 	if (currentCmdInd === (allUserCmds.length - 1)) {
 		clearCurrLine(0);
@@ -336,7 +346,7 @@ function adHandler(e) {
 		currentCmdInd += 1;
 		ctx.font = outputFont;
 		ctx.fillStyle = fontColor;
-		hisCommand = allUserCmds[currentCmdInd];
+		let hisCommand = allUserCmds[currentCmdInd];
 
 		ctx.fillText  (hisCommand.trim(),cursor.x, cursor.y);
 		cursor.x += charWidth * (hisCommand.trim().length);
@@ -344,6 +354,8 @@ function adHandler(e) {
 	}
 }
 
+// 外部变量：currentCmdInd allUserCmds ctx outputFont fontColor cursor
+//          charWidth
 function auHandler(e) {
 	if (currentCmdInd >= 0 && currentCmdInd <= (allUserCmds.length - 1)) {
 		blotOutCursor();
@@ -351,7 +363,7 @@ function auHandler(e) {
 
 		ctx.font = outputFont;
 		ctx.fillStyle = fontColor;
-		hisCommand = allUserCmds[currentCmdInd]
+		let hisCommand = allUserCmds[currentCmdInd]
 
 		ctx.fillText(hisCommand.trim(),cursor.x, cursor.y);
 		cursor.x += charWidth * (hisCommand.trim().length);
@@ -361,6 +373,7 @@ function auHandler(e) {
 	}
 }
 
+// 外部变量：ctx outputFont PROMPT charWidth cursor lineHeight promptPad
 function clearCurrLine(offset) {
 	ctx.font = outputFont;
 	ctx.fillStyle = "#000000";
